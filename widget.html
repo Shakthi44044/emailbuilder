@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Email Template Builder</title>
+  <script src="https://sdk.canva.com/js/sdk.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #canva-container {
+      height: 400px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="canva-container"></div>
+  <button id="export-design">Export Template</button>
+
+  <script>
+    const canvaEditor = new CanvaEditor({
+      target: document.getElementById("canva-container"),
+      designId: null // Optional: Load existing design if needed.
+    });
+
+    document.getElementById("export-design").addEventListener("click", async () => {
+      const design = await canvaEditor.export("png");
+      const messagePayload = {
+        text: "Here is the exported email template.",
+        file: { url: design, name: "email-template.png" }
+      };
+
+      // Send to Cliq
+      ZOHO.CLIQ.postToChat("chat", messagePayload);
+    });
+  </script>
+</body>
+</html>
